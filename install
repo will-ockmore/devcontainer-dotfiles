@@ -20,7 +20,7 @@ TODO: Copy over:
     - init.vim and coc-settings.json
 """
 
-ADDITIONAL_PROGRAMS = [("ripgrep", ["apt"])]
+ADDITIONAL_PROGRAMS = ["ripgrep", "fzf", "bat"]
 
 RED = "\x1b[31;20m"
 BOLD_CYAN = "\x1b[36;1m"
@@ -48,19 +48,13 @@ def progressbar(it, prefix="", size=60, out=sys.stdout):  # Python3.6+
 
 
 def install_programs():
-    print(f"{BOLD_WHITE}Unminimizing Ubuntu installation{RESET}")
+    print(f"{BOLD_WHITE}Installing additional programs...{RESET}")
     print()
 
     # Fetch latest package lists
     subprocess.run(["apt", "update"], check=True)
 
-    yes = subprocess.Popen(["yes"], stdout=subprocess.PIPE)
-    unminimize = subprocess.Popen(["unminimize"], stdin=yes.stdout, stdout=sys.stdout)
-    yes.stdout.close()
-    unminimize.communicate()
-
-    print(f"{BOLD_WHITE}Installing additional programs...{RESET}")
-    print()
+    subprocess.run(["apt", "install", *ADDITIONAL_PROGRAMS], check=True)
 
 
 def main():
@@ -68,7 +62,6 @@ def main():
     print()
 
     install_programs()
-    pass
 
 
 if __name__ == "__main__":
