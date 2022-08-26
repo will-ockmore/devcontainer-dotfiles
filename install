@@ -1,0 +1,67 @@
+#!/usr/bin/env python3
+
+from pathlib import Path
+from urllib.request import urlopen
+import subprocess
+
+"""
+TODO: Install:
+    - ripgrep
+    - fzf
+    - bat
+    - exa
+    - neovim
+    - pure prompt
+    
+TODO: Copy over:
+    - .zshrc
+    - aliases
+    - init.vim and coc-settings.json
+"""
+
+RED = "\x1b[31;20m"
+BOLD_CYAN = "\x1b[36;1m"
+BOLD_WHITE = "\x1b[37;1m"
+RESET = "\x1b[0m"
+
+
+def progressbar(it, prefix="", size=60, out=sys.stdout):  # Python3.6+
+    count = len(it)
+
+    def show(j):
+        x = int(size * j / count)
+        print(
+            f"{prefix}[{u'█'*x}{('.'*(size-x))}] {j}/{count}",
+            end="\r",
+            file=out,
+            flush=True,
+        )
+
+    show(0)
+    for i, item in enumerate(it):
+        yield item
+        show(i + 1)
+    print("\n", flush=True, file=out)
+
+
+def install_programs():
+    print(f"{BOLD_WHITE}Unminimizing Ubuntu installation{RESET}")
+    print()
+
+    yes = subprocess.run(["yes"], capture_output=True)
+    subprocess.run(["unminimize"], input=yes.stdout, check=True)
+
+    print(f"{BOLD_WHITE}Installing additional programs...{RESET}")
+    print()
+
+
+def main():
+    print(f"Running {BOLD_CYAN}dotfiles install script{RESET} 💿")
+    print()
+
+    install_programs()
+    pass
+
+
+if __name__ == "__main__":
+    main()
