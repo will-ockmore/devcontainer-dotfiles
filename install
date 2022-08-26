@@ -54,10 +54,11 @@ def install_programs():
     # Fetch latest package lists
     subprocess.run(["apt", "update"], check=True)
 
-    subprocess.run(["apt", "install", *ADDITIONAL_PROGRAMS], check=True)
+    subprocess.run(["apt", "install", "-y", *ADDITIONAL_PROGRAMS], check=True)
 
 
 def main():
+    print()
     print(f"Running {BOLD_CYAN}dotfiles install script{RESET} 💿")
     print()
 
