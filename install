@@ -4,6 +4,7 @@ from pathlib import Path
 from urllib.request import urlopen
 import subprocess
 import sys
+import shutil
 
 """
 TODO: Install:
@@ -20,7 +21,7 @@ TODO: Copy over:
     - init.vim and coc-settings.json
 """
 
-ADDITIONAL_PROGRAMS = ["ripgrep", "fzf", "bat"]
+ADDITIONAL_PROGRAMS = ["ripgrep", "fzf", "bat", "neovim", "exa"]
 
 RED = "\x1b[31;20m"
 BOLD_CYAN = "\x1b[36;1m"
@@ -28,23 +29,14 @@ BOLD_WHITE = "\x1b[37;1m"
 RESET = "\x1b[0m"
 
 
-def progressbar(it, prefix="", size=60, out=sys.stdout):  # Python3.6+
-    count = len(it)
+def copy_dotfiles():
+    print(f"{BOLD_WHITE}Moving configuration files...{RESET}")
+    print()
 
-    def show(j):
-        x = int(size * j / count)
-        print(
-            f"{prefix}[{u'█'*x}{('.'*(size-x))}] {j}/{count}",
-            end="\r",
-            file=out,
-            flush=True,
-        )
+    dotfiles_dir = Path(__file__).parent
 
-    show(0)
-    for i, item in enumerate(it):
-        yield item
-        show(i + 1)
-    print("\n", flush=True, file=out)
+    for entry in [".dotfiles", ".zshrc"]:
+        shutil.copytree(dotfiles_dir / entry, Path.home() / entry)
 
 
 def install_programs():
@@ -56,12 +48,25 @@ def install_programs():
 
     subprocess.run(["apt", "install", "-y", *ADDITIONAL_PROGRAMS], check=True)
 
+    # Install pure prompt
+    (Path.home() / ".zsh").mkdir(parents=True, exist_ok=True)
+    subprocess.run(
+        [
+            "git",
+            "clone",
+            "https://github.com/sindresorhus/pure.git",
+            str(Path.home() / ".zsh/pure"),
+        ],
+        check=True,
+    )
+
 
 def main():
     print()
     print(f"Running {BOLD_CYAN}dotfiles install script{RESET} 💿")
     print()
 
+    copy_dotfiles()
     install_programs()
 
 
