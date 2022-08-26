@@ -9,6 +9,21 @@ import subprocess
 
 ADDITIONAL_PROGRAMS = ["ripgrep", "fzf", "bat", "exa"]
 
+NEOVIM_BUILD_DEPENDENCIES = [
+    "ninja-build",
+    "gettext",
+    "libtool",
+    "libtool-bin",
+    "autoconf",
+    "automake",
+    "cmake",
+    "g++",
+    "pkg-config",
+    "unzip",
+    "curl",
+    "doxygen",
+]
+
 BOLD_CYAN = "\x1b[36;1m"
 BOLD_WHITE = "\x1b[37;1m"
 BOLD_GREEN = "\x1b[32;1m"
@@ -61,6 +76,45 @@ def copy_nvim_config():
         json.dump(coc_settings, outfile)
 
 
+def build_neovim():
+    print(f"{BOLD_WHITE}Building neovim...{RESET}")
+    print()
+    subprocess.run(
+        [
+            "git",
+            "clone",
+            "https://github.com/neovim/neovim",
+        ],
+        check=True,
+    )
+
+    os.chdir("neovim")
+
+    subprocess.run(
+        [
+            "git",
+            "checkout",
+            "stable",
+        ],
+        check=True,
+    )
+
+    subprocess.run(
+        [
+            "make",
+            "CMAKE_BUILD_TYPE=Release",
+        ],
+        check=True,
+    )
+    subprocess.run(
+        [
+            "make",
+            "install",
+        ],
+        check=True,
+    )
+
+
 def install_programs():
     print(f"{BOLD_WHITE}Installing additional programs...{RESET}")
     print()
@@ -68,16 +122,10 @@ def install_programs():
     # Fetch latest package lists
     subprocess.run(["apt", "update"], check=True)
 
-    subprocess.run(["apt", "install", "-y", *ADDITIONAL_PROGRAMS], check=True)
-
-    # Install latest neovim
-    neovim_deb = Path.cwd() / "nvim-linux64.deb"
-    urlretrieve(
-        "https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.deb",
-        neovim_deb,
+    subprocess.run(
+        ["apt", "install", "-y", *ADDITIONAL_PROGRAMS, *NEOVIM_BUILD_DEPENDENCIES],
+        check=True,
     )
-
-    subprocess.run(["apt", "install", neovim_deb], check=True)
 
     # Install pure prompt
     zsh_dir = Path.home() / ".zsh"
@@ -101,6 +149,7 @@ def main():
     copy_dotfiles()
     copy_nvim_config()
     install_programs()
+    build_neovim()
 
     print()
     print(f"{BOLD_GREEN}dotfiles installation complete{RESET} 🚀")
