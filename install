@@ -20,6 +20,8 @@ TODO: Copy over:
     - init.vim and coc-settings.json
 """
 
+ADDITIONAL_PROGRAMS = [("ripgrep", ["apt"])]
+
 RED = "\x1b[31;20m"
 BOLD_CYAN = "\x1b[36;1m"
 BOLD_WHITE = "\x1b[37;1m"
@@ -49,8 +51,11 @@ def install_programs():
     print(f"{BOLD_WHITE}Unminimizing Ubuntu installation{RESET}")
     print()
 
+    # Fetch latest package lists
+    subprocess.run(["apt", "update"], check=True)
+
     yes = subprocess.run(["yes"], capture_output=True)
-    subprocess.run(["unminimize"], input=yes.stdout, check=True)
+    subprocess.run(["unminimize"], input=yes.stdout, stdout=sys.stdout, check=True)
 
     print(f"{BOLD_WHITE}Installing additional programs...{RESET}")
     print()
