@@ -71,9 +71,13 @@ def install_programs():
     subprocess.run(["apt", "install", "-y", *ADDITIONAL_PROGRAMS], check=True)
 
     # Install latest neovim
-    urlretrieve("https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.deb")
+    neovim_deb = Path.cwd() / "nvim-linux64.deb"
+    urlretrieve(
+        "https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.deb",
+        neovim_deb,
+    )
 
-    subprocess.run(["apt", "install", "./nvim-linux64.deb"], check=True)
+    subprocess.run(["apt", "install", neovim_deb], check=True)
 
     # Install pure prompt
     zsh_dir = Path.home() / ".zsh"
