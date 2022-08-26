@@ -2,9 +2,10 @@
 
 from pathlib import Path
 from urllib.request import urlopen
+import os
+import shutil
 import subprocess
 import sys
-import shutil
 
 """
 TODO: Install:
@@ -29,14 +30,27 @@ BOLD_WHITE = "\x1b[37;1m"
 RESET = "\x1b[0m"
 
 
+def create_symlinks(dotfiles_dir_path: Path, dir_path: Path):
+    # Lifted verbatim from wayflyer/dotfiles
+    for entry in os.scandir(dir_path):
+        entry_path = dir_path / entry.name
+        entry_path_rel = entry_path.relative_to(dotfiles_dir_path)
+        local_path = Path(Path.home() / entry_path_rel)
+        if entry.is_dir():
+            if not local_path.exists():
+                local_path.mkdir()
+            create_symlinks(dotfiles_dir_path, entry_path)
+        else:
+            local_path.symlink_to(entry_path)
+
+
 def copy_dotfiles():
     print(f"{BOLD_WHITE}Moving configuration files...{RESET}")
     print()
 
-    dotfiles_dir = Path(__file__).parent
+    dotfiles_dir = Path(__file__).parent / "dotfiles"
 
-    for entry in [".dotfiles", ".zshrc"]:
-        shutil.copytree(dotfiles_dir / entry, Path.home() / entry)
+    create_symlinks(dotfiles_dir, dotfiles_dir)
 
 
 def install_programs():
