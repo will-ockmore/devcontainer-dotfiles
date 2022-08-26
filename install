@@ -54,8 +54,10 @@ def install_programs():
     # Fetch latest package lists
     subprocess.run(["apt", "update"], check=True)
 
-    yes = subprocess.run(["yes"], capture_output=True)
-    subprocess.run(["unminimize"], input=yes.stdout, stdout=sys.stdout, check=True)
+    yes = subprocess.Popen(["yes"], stdout=subprocess.PIPE)
+    unminimize = subprocess.Popen(["unminimize"], stdin=yes.stdout, stdout=sys.stdout)
+    yes.stdout.close()
+    unminimize.communicate()
 
     print(f"{BOLD_WHITE}Installing additional programs...{RESET}")
     print()
