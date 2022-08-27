@@ -36,7 +36,7 @@ def create_symlinks(dotfiles_dir_path: Path, dir_path: Path):
     for entry in os.scandir(dir_path):
         entry_path = dir_path / entry.name
         entry_path_rel = entry_path.relative_to(dotfiles_dir_path)
-        local_path = Path(Path.home() / entry_path_rel)
+        local_path = Path.home() / entry_path_rel
         if entry.is_dir():
             if not local_path.exists():
                 local_path.mkdir()
@@ -115,6 +115,16 @@ def build_neovim():
             check=True,
         )
         os.chdir(working_dir)
+
+    # Install pynvim
+    subprocess.run(
+        [
+            "pip",
+            "install",
+            "pynvim",
+        ],
+        check=True,
+    )
 
 
 def install_programs():
