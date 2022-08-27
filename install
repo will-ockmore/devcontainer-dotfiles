@@ -5,6 +5,7 @@ from urllib.request import urlopen, urlretrieve
 import json
 import os
 import subprocess
+import tempfile
 
 
 ADDITIONAL_PROGRAMS = ["ripgrep", "fzf", "bat", "exa"]
@@ -79,40 +80,41 @@ def copy_nvim_config():
 def build_neovim():
     print(f"{BOLD_WHITE}Building neovim...{RESET}")
     print()
-    subprocess.run(
-        [
-            "git",
-            "clone",
-            "https://github.com/neovim/neovim",
-        ],
-        check=True,
-    )
 
-    os.chdir("neovim")
+    working_dir = Path.cwd()
 
-    subprocess.run(
-        [
-            "git",
-            "checkout",
-            "stable",
-        ],
-        check=True,
-    )
+    with tempfile.TemporaryDirectory() as tmpdir:
+        subprocess.run(
+            ["git", "clone", "https://github.com/neovim/neovim", tmpdir],
+            check=True,
+        )
 
-    subprocess.run(
-        [
-            "make",
-            "CMAKE_BUILD_TYPE=Release",
-        ],
-        check=True,
-    )
-    subprocess.run(
-        [
-            "make",
-            "install",
-        ],
-        check=True,
-    )
+        os.chdir(tmpdir)
+
+        subprocess.run(
+            [
+                "git",
+                "checkout",
+                "stable",
+            ],
+            check=True,
+        )
+
+        subprocess.run(
+            [
+                "make",
+                "CMAKE_BUILD_TYPE=Release",
+            ],
+            check=True,
+        )
+        subprocess.run(
+            [
+                "make",
+                "install",
+            ],
+            check=True,
+        )
+        os.chdir(working_dir)
 
 
 def install_programs():
