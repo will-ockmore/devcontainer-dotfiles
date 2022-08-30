@@ -161,7 +161,8 @@ def install_programs():
         [
             "git",
             "clone",
-            "--depth 1",
+            "--depth",
+            "1",
             "https://github.com/junegunn/fzf.git",
             Path.home() / ".fzf",
         ],
