@@ -120,14 +120,14 @@ def build_neovim():
         os.chdir(working_dir)
 
     # Install pynvim
-    subprocess.run(
-        [
-            "pip",
-            "install",
-            "pynvim",
-        ],
-        check=True,
-    )
+    # subprocess.run(
+    #     [
+    #         "pip",
+    #         "install",
+    #         "pynvim",
+    #     ],
+    #     check=True,
+    # )
 
 
 def install_programs():
