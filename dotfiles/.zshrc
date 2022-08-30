@@ -4,6 +4,17 @@ setopt extended_glob
 # don't require explicitly matching a leading . in filenames
 setopt glob_dots
 
+# Save history from concurrent sessions
+setopt inc_append_history
+setopt extended_history
+setopt hist_expire_dups_first
+setopt hist_ignore_space
+HISTSIZE=100000000
+SAVEHIST=100000000
+
+# Set history to be persisted between `wfx up` runs
+HISTFILE='/opt/wf/.zsh_history'
+
 # Custom configuration
 # All commands and aliases are stored separately in the .dotfiles folder
 
@@ -16,6 +27,8 @@ source ~/.dotfiles/aliases.sh
 
 # Add scripts to PATH
 export PATH=$PATH:$HOME/.dotfiles/misc_scripts
+
+export GPG_TTY=$(tty)
 
 # Add further setup here (eg. NVM, GOPATH etc.)
 export EDITOR='nvim'
