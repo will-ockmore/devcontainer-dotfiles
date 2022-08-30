@@ -1,5 +1,6 @@
 # Aliases
 
+alias bat='batcat'
 
 # Python
 alias enva='if poetry check > /dev/null 2>&1; then source "$( poetry env list --full-path | grep Activated | cut -d'\'' '\'' -f1 )/bin/activate"; else source venv/bin/activate; fi'

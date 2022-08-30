@@ -25,9 +25,6 @@ prompt pure
 
 source ~/.dotfiles/aliases.sh
 
-# Add scripts to PATH
-export PATH=$PATH:$HOME/.dotfiles/misc_scripts
-
 export GPG_TTY=$(tty)
 
 # Add further setup here (eg. NVM, GOPATH etc.)
