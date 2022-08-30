@@ -3,6 +3,7 @@
 from pathlib import Path
 from urllib.request import urlopen, urlretrieve
 import json
+import sys
 import os
 import subprocess
 import tempfile
@@ -79,57 +80,6 @@ def copy_nvim_config():
         json.dump(coc_settings, outfile)
 
 
-def build_neovim():
-    print()
-    print(f"{BOLD_WHITE}Building neovim...{RESET}")
-    print()
-
-    working_dir = Path.cwd()
-
-    with tempfile.TemporaryDirectory() as tmpdir:
-        subprocess.run(
-            ["git", "clone", "https://github.com/neovim/neovim", tmpdir],
-            check=True,
-        )
-
-        os.chdir(tmpdir)
-
-        subprocess.run(
-            [
-                "git",
-                "checkout",
-                "stable",
-            ],
-            check=True,
-        )
-
-        subprocess.run(
-            [
-                "make",
-                "CMAKE_BUILD_TYPE=Release",
-            ],
-            check=True,
-        )
-        subprocess.run(
-            [
-                "make",
-                "install",
-            ],
-            check=True,
-        )
-        os.chdir(working_dir)
-
-    # Install pynvim
-    # subprocess.run(
-    #     [
-    #         "pip",
-    #         "install",
-    #         "pynvim",
-    #     ],
-    #     check=True,
-    # )
-
-
 def install_programs():
     print()
     print(f"{BOLD_WHITE}Installing additional programs...{RESET}")
@@ -171,16 +121,75 @@ def install_programs():
 
     yes = subprocess.Popen(["yes"], stdout=subprocess.PIPE)
     fzf_install = subprocess.Popen(
-        [Path.home() / ".fzf/install"], stdin=yes.stdout, stdout=subprocess.PIPE
+        [Path.home() / ".fzf/install"], stdin=yes.stdout, stdout=sys.stdout
     )
     yes.stdout.close()
     fzf_install.communicate()
+
+
+def build_neovim():
+    print()
+    print(f"{BOLD_WHITE}Building neovim...{RESET}")
+    print()
+
+    working_dir = Path.cwd()
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        subprocess.run(
+            ["git", "clone", "https://github.com/neovim/neovim", tmpdir],
+            check=True,
+        )
+
+        os.chdir(tmpdir)
+
+        subprocess.run(
+            [
+                "git",
+                "checkout",
+                "stable",
+            ],
+            check=True,
+        )
+
+        subprocess.run(
+            [
+                "make",
+                "CMAKE_BUILD_TYPE=Release",
+            ],
+            check=True,
+        )
+        subprocess.run(
+            [
+                "make",
+                "install",
+            ],
+            check=True,
+        )
+        os.chdir(working_dir)
+
+    # Install pynvim
+    subprocess.run(
+        [
+            "pip",
+            "install",
+            "pynvim",
+        ],
+        check=True,
+    )
 
 
 def main():
     print()
     print(f"Running {BOLD_CYAN}dotfiles install script{RESET} 💿")
     print()
+
+    subprocess.run(
+        [
+            "wf",
+            "login",
+        ],
+        check=True,
+    )
 
     copy_dotfiles()
     copy_nvim_config()
