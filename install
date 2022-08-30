@@ -169,6 +169,13 @@ def install_programs():
         check=True,
     )
 
+    yes = subprocess.Popen(["yes"], stdout=subprocess.PIPE)
+    fzf_install = subprocess.Popen(
+        [Path.home() / ".fzf/install"], stdin=yes.stdout, stdout=subprocess.PIPE
+    )
+    yes.stdout.close()
+    fzf_install.communicate()
+
 
 def main():
     print()
