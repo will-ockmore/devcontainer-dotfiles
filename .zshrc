@@ -5,7 +5,7 @@ setopt extended_glob
 setopt glob_dots
 
 # Save history from concurrent sessions
-setopt append_history
+setopt inc_append_history
 setopt extended_history
 setopt hist_expire_dups_first
 setopt hist_ignore_space
@@ -27,6 +27,8 @@ source ~/.dotfiles/aliases.sh
 
 # Add scripts to PATH
 export PATH=$PATH:$HOME/.dotfiles/misc_scripts
+
+export GPG_TTY=$(tty)
 
 # Add further setup here (eg. NVM, GOPATH etc.)
 export EDITOR='nvim'

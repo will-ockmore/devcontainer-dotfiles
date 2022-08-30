@@ -165,7 +165,7 @@ def main():
     copy_dotfiles()
     copy_nvim_config()
     install_programs()
-    build_neovim()
+    # build_neovim()
 
     print()
     print(f"{BOLD_GREEN}dotfiles installation complete{RESET} 🚀")
