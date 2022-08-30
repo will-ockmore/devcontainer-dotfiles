@@ -8,7 +8,7 @@ import subprocess
 import tempfile
 
 
-ADDITIONAL_PROGRAMS = ["ripgrep", "fzf", "bat", "exa"]
+ADDITIONAL_PROGRAMS = ["ripgrep", "bat", "exa"]
 
 NEOVIM_BUILD_DEPENDENCIES = [
     "ninja-build",
@@ -152,6 +152,18 @@ def install_programs():
             "clone",
             "https://github.com/sindresorhus/pure.git",
             str(zsh_dir / "pure"),
+        ],
+        check=True,
+    )
+
+    # Install FZF
+    subprocess.run(
+        [
+            "git",
+            "clone",
+            "--depth 1",
+            "https://github.com/junegunn/fzf.git",
+            Path.home() / ".fzf",
         ],
         check=True,
     )
