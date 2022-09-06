@@ -96,7 +96,7 @@ def install_programs():
     print()
 
     # Fetch latest package lists
-    # subprocess.run(["apt", "update"], check=True)
+    subprocess.run(["apt", "update"], check=True)
 
     dependencies = ADDITIONAL_PROGRAMS
 
