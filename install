@@ -110,7 +110,7 @@ def install_programs():
     print()
 
     # Fetch latest package lists
-    subprocess.run(["apt", "update"], check=True)
+    subprocess.run(["apt", "update", "-q"], check=True)
 
     dependencies = ADDITIONAL_PROGRAMS
 
@@ -118,7 +118,7 @@ def install_programs():
         dependencies += NEOVIM_BUILD_DEPENDENCIES
 
     subprocess.run(
-        ["apt", "install", "-y", *dependencies],
+        ["apt", "install", "-yq", *dependencies],
         check=True,
     )
 
