@@ -27,10 +27,12 @@ source ~/.dotfiles/aliases.sh
 
 export GPG_TTY=$(tty)
 
-# Add further setup here (eg. NVM, GOPATH etc.)
 export EDITOR='nvim'
 alias vi='nvim'
 alias vim='nvim'
+
+# Add neovim location to PATH
+export PATH=$PATH:$WF_STATE_DIR/neovim/bin
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export FZF_DEFAULT_COMMAND="rg --files --no-ignore --hidden --follow --glob '!.git/*'"

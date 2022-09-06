@@ -3,7 +3,7 @@
 from pathlib import Path
 from urllib.request import urlopen, urlretrieve
 import json
-import sys
+from datetime import datetime, timedelta
 import os
 import subprocess
 import tempfile
@@ -39,7 +39,21 @@ def should_build_neovim() -> bool:
     """
     Check to see if there is a recent cached version
     """
+
+    nvim_binary_location = NEOVIM_INSTALL_LOCATION / "bin/nvim"
+
+    if nvim_binary_location.exists():
+        one_week_ago = datetime.now() - timedelta(days=7)
+        nvim_last_modified = datetime.fromtimestamp(
+            nvim_binary_location.stat().st_mtime
+        )
+
+        return nvim_last_modified < one_week_ago
+
     return True
+
+
+SHOULD_BUILD_NEOVIM = should_build_neovim()
 
 
 def create_symlinks(dotfiles_dir_path: Path, dir_path: Path):
@@ -100,7 +114,7 @@ def install_programs():
 
     dependencies = ADDITIONAL_PROGRAMS
 
-    if should_build_neovim():
+    if SHOULD_BUILD_NEOVIM:
         dependencies += NEOVIM_BUILD_DEPENDENCIES
 
     subprocess.run(
@@ -185,9 +199,6 @@ def build_neovim():
         )
         os.chdir(working_dir)
 
-    import pdb
-
-    pdb.set_trace()
     # Install pynvim
     subprocess.run(
         [
@@ -204,7 +215,7 @@ def main():
     print(f"Running {BOLD_CYAN}dotfiles install script{RESET} 💿")
     print()
 
-    if should_build_neovim():
+    if SHOULD_BUILD_NEOVIM:
         subprocess.run(
             [
                 "wf",
@@ -217,7 +228,7 @@ def main():
     copy_nvim_config()
     install_programs()
 
-    if should_build_neovim():
+    if SHOULD_BUILD_NEOVIM:
         build_neovim()
 
     print()
