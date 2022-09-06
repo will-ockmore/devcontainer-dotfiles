@@ -26,10 +26,20 @@ NEOVIM_BUILD_DEPENDENCIES = [
     "doxygen",
 ]
 
+WF_STATE_DIR = Path(os.environ["WF_STATE_DIR"])
+NEOVIM_INSTALL_LOCATION = WF_STATE_DIR / "neovim"
+
 BOLD_CYAN = "\x1b[36;1m"
 BOLD_WHITE = "\x1b[37;1m"
 BOLD_GREEN = "\x1b[32;1m"
 RESET = "\x1b[0m"
+
+
+def should_build_neovim() -> bool:
+    """
+    Check to see if there is a recent cached version
+    """
+    return True
 
 
 def create_symlinks(dotfiles_dir_path: Path, dir_path: Path):
@@ -86,10 +96,15 @@ def install_programs():
     print()
 
     # Fetch latest package lists
-    subprocess.run(["apt", "update"], check=True)
+    # subprocess.run(["apt", "update"], check=True)
+
+    dependencies = ADDITIONAL_PROGRAMS
+
+    if should_build_neovim():
+        dependencies += NEOVIM_BUILD_DEPENDENCIES
 
     subprocess.run(
-        ["apt", "install", "-y", *ADDITIONAL_PROGRAMS, *NEOVIM_BUILD_DEPENDENCIES],
+        ["apt", "install", "-y", *dependencies],
         check=True,
     )
 
@@ -121,7 +136,7 @@ def install_programs():
 
     yes = subprocess.Popen(["yes"], stdout=subprocess.PIPE)
     fzf_install = subprocess.Popen(
-        [Path.home() / ".fzf/install"], stdin=yes.stdout, stdout=sys.stdout
+        [Path.home() / ".fzf/install"], stdin=yes.stdout, stdout=subprocess.PIPE
     )
     yes.stdout.close()
     fzf_install.communicate()
@@ -151,10 +166,13 @@ def build_neovim():
             check=True,
         )
 
+        NEOVIM_INSTALL_LOCATION.mkdir(exist_ok=True)
+
         subprocess.run(
             [
                 "make",
                 "CMAKE_BUILD_TYPE=Release",
+                f"CMAKE_EXTRA_FLAGS='-DCMAKE_INSTALL_PREFIX={NEOVIM_INSTALL_LOCATION}'",
             ],
             check=True,
         )
@@ -167,6 +185,9 @@ def build_neovim():
         )
         os.chdir(working_dir)
 
+    import pdb
+
+    pdb.set_trace()
     # Install pynvim
     subprocess.run(
         [
@@ -183,18 +204,21 @@ def main():
     print(f"Running {BOLD_CYAN}dotfiles install script{RESET} 💿")
     print()
 
-    subprocess.run(
-        [
-            "wf",
-            "login",
-        ],
-        check=True,
-    )
+    if should_build_neovim():
+        subprocess.run(
+            [
+                "wf",
+                "login",
+            ],
+            check=True,
+        )
 
     copy_dotfiles()
     copy_nvim_config()
     install_programs()
-    build_neovim()
+
+    if should_build_neovim():
+        build_neovim()
 
     print()
     print(f"{BOLD_GREEN}dotfiles installation complete{RESET} 🚀")
