@@ -99,6 +99,8 @@ def copy_nvim_config():
         ).read()
     )
     del coc_settings["python.formatting.blackPath"]
+    coc_settings["python.analysis.typeCheckingMode"] = "off"
+    coc_settings["python.linting.mypyEnabled"] = True
 
     with open(nvim_config_dir / "coc-settings.json", "w+") as outfile:
         json.dump(coc_settings, outfile)
@@ -130,7 +132,7 @@ def install_programs():
             "git",
             "clone",
             "https://github.com/sindresorhus/pure.git",
-            str(zsh_dir / "pure"),
+            zsh_dir / "pure",
         ],
         check=True,
     )
@@ -212,7 +214,7 @@ def build_neovim():
 
 def main():
     print()
-    print(f"Running {BOLD_CYAN}dotfiles install script{RESET} 💿")
+    print(f"{BOLD_CYAN}Running dotfiles install script{RESET} 💿")
     print()
 
     if SHOULD_BUILD_NEOVIM:
