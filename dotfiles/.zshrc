@@ -35,5 +35,5 @@ alias vim='nvim'
 export PATH=$PATH:$WF_STATE_DIR/neovim/bin
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-export FZF_DEFAULT_COMMAND="rg --files --no-ignore --hidden --follow --glob '!.git/*'"
+export FZF_DEFAULT_COMMAND="rg --files --no-ignore --hidden --follow --glob '!.git/*' --glob '!*node_modules*' --glob '!*venv*'" 
 
