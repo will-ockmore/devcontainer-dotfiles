@@ -13,7 +13,7 @@ HISTSIZE=100000000
 SAVEHIST=100000000
 
 # Set history to be persisted between `wfx up` runs
-HISTFILE='/opt/wf-state/.zsh_history'
+HISTFILE="$WF_STATE_DIR/.zsh_history"
 
 # Custom configuration
 # All commands and aliases are stored separately in the .dotfiles folder
