@@ -43,12 +43,12 @@ def should_build_neovim() -> bool:
     nvim_binary_location = NEOVIM_INSTALL_LOCATION / "bin/nvim"
 
     if nvim_binary_location.exists():
-        one_week_ago = datetime.now() - timedelta(days=7)
+        four_weeks_ago = datetime.now() - timedelta(weeks=4)
         nvim_last_modified = datetime.fromtimestamp(
             nvim_binary_location.stat().st_mtime
         )
 
-        return nvim_last_modified < one_week_ago
+        return nvim_last_modified < four_weeks_ago
 
     return True
 
