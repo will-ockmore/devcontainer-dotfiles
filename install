@@ -9,7 +9,7 @@ import subprocess
 import tempfile
 
 
-ADDITIONAL_PROGRAMS = ["ripgrep", "bat", "exa", "tig", "jq"]
+ADDITIONAL_PROGRAMS = ["bat", "exa", "tig"]
 
 NEOVIM_BUILD_DEPENDENCIES = [
     "ninja-build",
