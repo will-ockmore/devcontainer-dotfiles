@@ -158,6 +158,22 @@ def install_programs():
     fzf_install.communicate()
 
 
+SWITCH_TO_ZSH = """
+if [ -t 1 ]; then
+  exec zsh
+fi
+"""
+
+
+def change_login_shell():
+    print()
+    print(f"{BOLD_WHITE}Switching login shell to ZSH...{RESET}")
+    print()
+
+    with open(Path.home() / ".bashrc", "a") as outfile:
+        outfile.write(SWITCH_TO_ZSH)
+
+
 def build_neovim():
     print()
     print(f"{BOLD_WHITE}Building neovim...{RESET}")
@@ -183,7 +199,6 @@ def build_neovim():
         )
 
         NEOVIM_INSTALL_LOCATION.mkdir(exist_ok=True)
-
         subprocess.run(
             [
                 "make",
