@@ -27,9 +27,12 @@ source ~/.dotfiles/aliases.sh
 
 export GPG_TTY=$(tty)
 
-export EDITOR='nvim'
 alias vi='nvim'
 alias vim='nvim'
+
+export EDITOR='nvim'
+export VISUAL=$EDITOR
+export GIT_EDITOR=$EDITOR
 
 # Add neovim location to PATH
 export PATH=$PATH:$WF_STATE_DIR/neovim/bin
