@@ -24,6 +24,7 @@ autoload -U promptinit; promptinit
 prompt pure
 
 source ~/.dotfiles/aliases.sh
+source ~/.dotfiles/misc-commands.sh
 
 export GPG_TTY=$(tty)
 
