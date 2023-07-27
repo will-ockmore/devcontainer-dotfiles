@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 import os
 import subprocess
 import tempfile
+import shutil
 
 
 ADDITIONAL_PROGRAMS = ["bat", "exa", "tig"]
@@ -67,6 +68,8 @@ def create_symlinks(dotfiles_dir_path: Path, dir_path: Path):
                 local_path.mkdir()
             create_symlinks(dotfiles_dir_path, entry_path)
         else:
+            if local_path.exists():
+                local_path.unlink()
             local_path.symlink_to(entry_path)
 
 
@@ -127,15 +130,25 @@ def install_programs():
     # Install pure prompt
     zsh_dir = Path.home() / ".zsh"
     zsh_dir.mkdir(parents=True, exist_ok=True)
+    pure_dir = zsh_dir / "pure"
+
+    if pure_dir.exists():
+        shutil.rmtree(pure_dir)
+
     subprocess.run(
         [
             "git",
             "clone",
             "https://github.com/sindresorhus/pure.git",
-            zsh_dir / "pure",
+            pure_dir,
         ],
         check=True,
     )
+
+    fzf_dir = Path.home() / ".fzf"
+
+    if fzf_dir.exists():
+        shutil.rmtree(fzf_dir)
 
     # Install FZF
     subprocess.run(
@@ -145,7 +158,7 @@ def install_programs():
             "--depth",
             "1",
             "https://github.com/junegunn/fzf.git",
-            Path.home() / ".fzf",
+            fzf_dir,
         ],
         check=True,
     )
