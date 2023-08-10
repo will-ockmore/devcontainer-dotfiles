@@ -220,6 +220,7 @@ def build_neovim():
             "pip",
             "install",
             "pynvim",
+            "--break-system-packages"
         ],
         check=True,
     )
