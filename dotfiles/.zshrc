@@ -45,7 +45,7 @@ if [[ ! -f /usr/share/doc/fzf/examples/completion.zsh ]]; then
 fi
 
 [ -f /usr/share/doc/fzf/examples/key-bindings.zsh ] && source /usr/share/doc/fzf/examples/key-bindings.zsh
-[ -f /usr/share/bash-completion/completions/fzf ] && source /usr/share/bash-completion/completions/fzf
+[ -f /usr/share/doc/fzf/examples/fzf ] && source /usr/share/doc/fzf/examples/fzf
 
 export FZF_DEFAULT_COMMAND="rg --files --no-ignore --hidden --follow --glob '!.git/*' --glob '!*node_modules*' --glob '!*venv*'"
 export FZF_CTRL_T_COMMAND=$FZF_DEFAULT_COMMAND
