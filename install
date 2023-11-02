@@ -145,31 +145,6 @@ def install_programs():
         check=True,
     )
 
-    fzf_dir = Path.home() / ".fzf"
-
-    if fzf_dir.exists():
-        shutil.rmtree(fzf_dir)
-
-    # Install FZF
-    subprocess.run(
-        [
-            "git",
-            "clone",
-            "--depth",
-            "1",
-            "https://github.com/junegunn/fzf.git",
-            fzf_dir,
-        ],
-        check=True,
-    )
-
-    yes = subprocess.Popen(["yes"], stdout=subprocess.PIPE)
-    fzf_install = subprocess.Popen(
-        [Path.home() / ".fzf/install"], stdin=yes.stdout, stdout=subprocess.PIPE
-    )
-    yes.stdout.close()
-    fzf_install.communicate()
-
 
 def build_neovim():
     print()
