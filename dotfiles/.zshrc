@@ -39,6 +39,7 @@ export GIT_EDITOR=$EDITOR
 export PATH=$PATH:$WF_STATE_DIR/neovim/bin
 
 
+# fzf completions
 if [[ ! -f /usr/share/doc/fzf/examples/completion.zsh ]]; then
   curl https://raw.githubusercontent.com/junegunn/fzf/master/shell/completion.zsh -o /usr/share/doc/fzf/examples/completion.zsh
   curl https://raw.githubusercontent.com/junegunn/fzf/master/shell/key-bindings.zsh -o /usr/share/doc/fzf/examples/key-bindings.zsh
