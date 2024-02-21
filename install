@@ -10,7 +10,7 @@ import tempfile
 import shutil
 
 
-ADDITIONAL_PROGRAMS = ["bat", "exa", "tig"]
+ADDITIONAL_PROGRAMS = ["bat", "exa", "tig", "fzf"]
 
 NEOVIM_BUILD_DEPENDENCIES = [
     "ninja-build",
