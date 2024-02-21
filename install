@@ -28,7 +28,7 @@ NEOVIM_BUILD_DEPENDENCIES = [
 ]
 
 WF_STATE_DIR = os.environ.get("WF_STATE_DIR")
-SB_STATE_DIR = os.environ.get("WF_STATE_DIR")
+SB_STATE_DIR = os.environ.get("SB_STATE_DIR")
 
 if WF_STATE_DIR:
     NEOVIM_INSTALL_LOCATION = Path(WF_STATE_DIR) / "neovim"

@@ -12,8 +12,14 @@ setopt hist_ignore_space
 HISTSIZE=100000000
 SAVEHIST=100000000
 
+STATE_DIR=$HOME
+
+[ -n "$WF_STATE_DIR" ] && STATE_DIR="$WF_STATE_DIR"
+[ -n "$SB_STATE_DIR" ] && STATE_DIR="$SB_STATE_DIR"
+
+
 # Set history to be persisted between `wfx up` runs
-HISTFILE="$WF_STATE_DIR/.zsh_history"
+HISTFILE="$STATE_DIR/.zsh_history"
 
 # Custom configuration
 # All commands and aliases are stored separately in the .dotfiles folder
@@ -38,7 +44,7 @@ export GIT_EDITOR=$EDITOR
 export DO_NOT_TRACK=1
 
 # Add neovim location to PATH
-export PATH=$PATH:$WF_STATE_DIR/neovim/bin
+export PATH=$PATH:$STATE_DIR/neovim/bin
 
 
 # fzf completions
