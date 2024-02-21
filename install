@@ -27,8 +27,17 @@ NEOVIM_BUILD_DEPENDENCIES = [
     "doxygen",
 ]
 
-WF_STATE_DIR = Path(os.environ["WF_STATE_DIR"])
-NEOVIM_INSTALL_LOCATION = WF_STATE_DIR / "neovim"
+WF_STATE_DIR = os.environ.get("WF_STATE_DIR")
+SB_STATE_DIR = os.environ.get("WF_STATE_DIR")
+
+if WF_STATE_DIR:
+    NEOVIM_INSTALL_LOCATION = Path(WF_STATE_DIR) / "neovim"
+elif SB_STATE_DIR:
+    NEOVIM_INSTALL_LOCATION = Path(SB_STATE_DIR) / "neovim"
+else:
+    raise Exception("No state directory")
+
+
 
 BOLD_CYAN = "\x1b[36;1m"
 BOLD_WHITE = "\x1b[37;1m"
@@ -191,12 +200,7 @@ def build_neovim():
 
     # Install pynvim
     subprocess.run(
-        [
-            "pip",
-            "install",
-            "pynvim",
-            "--break-system-packages"
-        ],
+        ["pip", "install", "pynvim", "--break-system-packages"],
         check=True,
     )
 
@@ -206,7 +210,7 @@ def main():
     print(f"{BOLD_CYAN}Running dotfiles install script{RESET} 💿")
     print()
 
-    if SHOULD_BUILD_NEOVIM:
+    if SHOULD_BUILD_NEOVIM and WF_STATE_DIR:
         subprocess.run(
             [
                 "wf",
