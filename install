@@ -99,7 +99,7 @@ def install_programs():
             "https://github.com/sindresorhus/pure.git",
             pure_dir,
         ],
-        input="y\ny\nn\n",  # Install fuzzy completion and key bindings, don't change shell files
+        input=b"y\ny\nn\n",  # Install fuzzy completion and key bindings, don't change shell files
         check=True,
     )
 
