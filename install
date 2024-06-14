@@ -102,9 +102,16 @@ def install_programs():
         check=True,
     )
 
+    # Install fzf
+
+    # Uninstall fzf if it's already installed
+    subprocess.run(
+        ["apt", "remove", "-yq", "fzf"],
+        check=True,
+    )
+
     fzf_install_path = Path.home() / ".fzf"
 
-    # Install fzf
     subprocess.run(
         [
             "git",
