@@ -103,6 +103,8 @@ def install_programs():
         check=True,
     )
 
+    fzf_install_path = Path.home() / ".fzf"
+
     # Install fzf
     subprocess.run(
         [
@@ -111,13 +113,13 @@ def install_programs():
             "--depth",
             "1",
             "https://github.com/junegunn/fzf.git",
-            "~/.fzf",
+            fzf_install_path,
         ],
         check=True,
     )
 
     subprocess.run(
-        ["~/.fzf/install"],
+        [fzf_install_path / "install"],
         check=True,
     )
 
