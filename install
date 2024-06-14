@@ -111,6 +111,7 @@ def install_programs():
     )
 
     fzf_install_path = Path.home() / ".fzf"
+    shutil.rmtree(fzf_install_path, ignore_errors=True)
 
     subprocess.run(
         [
