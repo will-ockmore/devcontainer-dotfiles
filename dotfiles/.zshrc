@@ -46,15 +46,5 @@ export DO_NOT_TRACK=1
 # Add neovim location to PATH
 export PATH=$PATH:$STATE_DIR/neovim/bin
 
-
-# fzf completions
-if [[ ! -f /usr/share/doc/fzf/examples/completion.zsh ]]; then
-  curl https://raw.githubusercontent.com/junegunn/fzf/master/shell/completion.zsh -o /usr/share/doc/fzf/examples/completion.zsh
-  curl https://raw.githubusercontent.com/junegunn/fzf/master/shell/key-bindings.zsh -o /usr/share/doc/fzf/examples/key-bindings.zsh
-fi
-
-[ -f /usr/share/doc/fzf/examples/key-bindings.zsh ] && source /usr/share/doc/fzf/examples/key-bindings.zsh
-[ -f /usr/share/doc/fzf/examples/fzf ] && source /usr/share/doc/fzf/examples/fzf
-
 export FZF_DEFAULT_COMMAND="rg --files --no-ignore --hidden --follow --glob '!.git/*' --glob '!*node_modules*' --glob '!*venv*'"
 export FZF_CTRL_T_COMMAND=$FZF_DEFAULT_COMMAND
