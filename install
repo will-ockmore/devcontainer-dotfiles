@@ -1,17 +1,32 @@
 #!/usr/bin/env python3
 
 import os
+import platform
 import shutil
 import subprocess
 from pathlib import Path
 from urllib.request import urlretrieve
 
-ADDITIONAL_PROGRAMS = ["bat", "exa", "tig", "fzf", "neovim", "ripgrep"]
+ADDITIONAL_PROGRAMS = ["bat", "exa", "tig", "neovim", "ripgrep"]
 
 BOLD_CYAN = "\x1b[36;1m"
 BOLD_WHITE = "\x1b[37;1m"
 BOLD_GREEN = "\x1b[32;1m"
 RESET = "\x1b[0m"
+
+
+def get_architecture():
+    arch = platform.machine()
+    if arch == "x86_64":
+        return "amd64"
+    elif arch == "i386" or arch == "i686":
+        return "386"
+    elif "arm" in arch:
+        return "arm"
+    elif "aarch64" in arch:
+        return "arm64"
+    else:
+        raise ValueError(f"Unsupported architecture: {arch}")
 
 
 def create_symlinks(dotfiles_dir_path: Path, dir_path: Path):
@@ -84,6 +99,24 @@ def install_programs():
             "https://github.com/sindresorhus/pure.git",
             pure_dir,
         ],
+        check=True,
+    )
+
+    # Install fzf
+    subprocess.run(
+        [
+            "git",
+            "clone",
+            "--depth",
+            "1",
+            "https://github.com/junegunn/fzf.git",
+            "~/.fzf",
+        ],
+        check=True,
+    )
+
+    subprocess.run(
+        ["~/.fzf/install"],
         check=True,
     )
 
