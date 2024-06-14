@@ -46,5 +46,7 @@ export DO_NOT_TRACK=1
 # Add neovim location to PATH
 export PATH=$PATH:$STATE_DIR/neovim/bin
 
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
 export FZF_DEFAULT_COMMAND="rg --files --no-ignore --hidden --follow --glob '!.git/*' --glob '!*node_modules*' --glob '!*venv*'"
 export FZF_CTRL_T_COMMAND=$FZF_DEFAULT_COMMAND
