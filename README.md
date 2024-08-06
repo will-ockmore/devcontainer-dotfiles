@@ -1,2 +1,3 @@
-# wayflyer-dotfiles
-Dotfiles for the wayflyer dev container
+# devcontainer-dotfiles
+
+Dotfiles for dev containers
