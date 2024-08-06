@@ -1,13 +1,42 @@
 #!/usr/bin/env python3
 
+import json
 import os
-import platform
 import shutil
 import subprocess
+import tempfile
+from datetime import datetime, timedelta
 from pathlib import Path
-from urllib.request import urlretrieve
+from urllib.request import urlopen, urlretrieve
 
-ADDITIONAL_PROGRAMS = ["bat", "eza", "tig", "neovim", "ripgrep"]
+ADDITIONAL_PROGRAMS = ["bat", "exa", "tig", "fzf", "ripgrep"]
+
+NEOVIM_BUILD_DEPENDENCIES = [
+    "ninja-build",
+    "gettext",
+    "libtool",
+    "libtool-bin",
+    "autoconf",
+    "automake",
+    "cmake",
+    "g++",
+    "pkg-config",
+    "unzip",
+    "curl",
+    "doxygen",
+]
+
+WF_STATE_DIR = os.environ.get("WF_STATE_DIR")
+SB_STATE_DIR = os.environ.get("SB_STATE_DIR")
+
+if WF_STATE_DIR:
+    NEOVIM_INSTALL_LOCATION = Path(WF_STATE_DIR) / "neovim"
+elif SB_STATE_DIR:
+    NEOVIM_INSTALL_LOCATION = Path(SB_STATE_DIR) / "neovim"
+else:
+    raise Exception("No state directory")
+
+
 
 BOLD_CYAN = "\x1b[36;1m"
 BOLD_WHITE = "\x1b[37;1m"
@@ -15,18 +44,25 @@ BOLD_GREEN = "\x1b[32;1m"
 RESET = "\x1b[0m"
 
 
-def get_architecture():
-    arch = platform.machine()
-    if arch == "x86_64":
-        return "amd64"
-    elif arch == "i386" or arch == "i686":
-        return "386"
-    elif "arm" in arch:
-        return "arm"
-    elif "aarch64" in arch:
-        return "arm64"
-    else:
-        raise ValueError(f"Unsupported architecture: {arch}")
+def should_build_neovim() -> bool:
+    """
+    Check to see if there is a recent cached version
+    """
+
+    nvim_binary_location = NEOVIM_INSTALL_LOCATION / "bin/nvim"
+
+    if nvim_binary_location.exists():
+        four_weeks_ago = datetime.now() - timedelta(weeks=4)
+        nvim_last_modified = datetime.fromtimestamp(
+            nvim_binary_location.stat().st_mtime
+        )
+
+        return nvim_last_modified < four_weeks_ago
+
+    return True
+
+
+SHOULD_BUILD_NEOVIM = should_build_neovim()
 
 
 def create_symlinks(dotfiles_dir_path: Path, dir_path: Path):
@@ -68,6 +104,18 @@ def copy_nvim_config():
         nvim_config_dir / "init.vim",
     )
 
+    coc_settings = json.loads(
+        urlopen(
+            "https://raw.githubusercontent.com/will-ockmore/vimrc/master/coc-settings.json"
+        ).read()
+    )
+    del coc_settings["python.formatting.blackPath"]
+    coc_settings["python.analysis.typeCheckingMode"] = "off"
+    coc_settings["python.linting.mypyEnabled"] = True
+
+    with open(nvim_config_dir / "coc-settings.json", "w+") as outfile:
+        json.dump(coc_settings, outfile)
+
 
 def install_programs():
     print()
@@ -78,6 +126,9 @@ def install_programs():
     subprocess.run(["apt", "update", "-q"], check=True)
 
     dependencies = ADDITIONAL_PROGRAMS
+
+    if SHOULD_BUILD_NEOVIM:
+        dependencies += NEOVIM_BUILD_DEPENDENCIES
 
     subprocess.run(
         ["apt", "install", "-yq", *dependencies],
@@ -136,14 +187,76 @@ def install_programs():
     )
 
 
+def build_neovim():
+    print()
+    print(f"{BOLD_WHITE}Building neovim...{RESET}")
+    print()
+
+    working_dir = Path.cwd()
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        subprocess.run(
+            ["git", "clone", "https://github.com/neovim/neovim", tmpdir],
+            check=True,
+        )
+
+        os.chdir(tmpdir)
+
+        subprocess.run(
+            [
+                "git",
+                "checkout",
+                "stable",
+            ],
+            check=True,
+        )
+
+        NEOVIM_INSTALL_LOCATION.mkdir(exist_ok=True)
+
+        subprocess.run(
+            [
+                "make",
+                "CMAKE_BUILD_TYPE=Release",
+                f"CMAKE_EXTRA_FLAGS='-DCMAKE_INSTALL_PREFIX={NEOVIM_INSTALL_LOCATION}'",
+            ],
+            check=True,
+        )
+        subprocess.run(
+            [
+                "make",
+                "install",
+            ],
+            check=True,
+        )
+        os.chdir(working_dir)
+
+    # Install pynvim
+    subprocess.run(
+        ["pip", "install", "pynvim", "--break-system-packages"],
+        check=True,
+    )
+
+
 def main():
     print()
     print(f"{BOLD_CYAN}Running dotfiles install script{RESET} 💿")
     print()
 
+    if SHOULD_BUILD_NEOVIM and WF_STATE_DIR:
+        subprocess.run(
+            [
+                "wf",
+                "login",
+            ],
+            check=True,
+        )
+
     copy_dotfiles()
     copy_nvim_config()
     install_programs()
+
+    if SHOULD_BUILD_NEOVIM:
+        build_neovim()
 
     print()
     print(f"{BOLD_GREEN}dotfiles installation complete{RESET} 🚀")
