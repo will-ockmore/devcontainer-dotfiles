@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from urllib.request import urlopen, urlretrieve
 
-ADDITIONAL_PROGRAMS = ["bat", "exa", "tig", "fzf", "ripgrep"]
+ADDITIONAL_PROGRAMS = ["bat", "eza", "tig", "fzf", "ripgrep"]
 
 NEOVIM_BUILD_DEPENDENCIES = [
     "ninja-build",
