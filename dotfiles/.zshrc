@@ -41,6 +41,7 @@ export EDITOR='nvim'
 export VISUAL=$EDITOR
 export GIT_EDITOR=$EDITOR
 
+
 export DO_NOT_TRACK=1
 
 # Add neovim location to PATH
