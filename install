@@ -37,7 +37,6 @@ else:
     raise Exception("No state directory")
 
 
-
 BOLD_CYAN = "\x1b[36;1m"
 BOLD_WHITE = "\x1b[37;1m"
 BOLD_GREEN = "\x1b[32;1m"
@@ -229,12 +228,6 @@ def build_neovim():
             check=True,
         )
         os.chdir(working_dir)
-
-    # Install pynvim
-    subprocess.run(
-        ["pip", "install", "pynvim", "--break-system-packages"],
-        check=True,
-    )
 
 
 def main():
