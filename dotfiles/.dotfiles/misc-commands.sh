@@ -1,6 +1,6 @@
 # Git
 ,gb() {
-    local branch=$(git branch --sort=-committerdate | fzf)
+    local branch=$(git branch --format='%(refname:short)' --sort=-committerdate | fzf)
     if [[ -n "$branch" ]]; then
         git checkout "$branch"
     else
