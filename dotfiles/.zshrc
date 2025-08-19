@@ -41,8 +41,10 @@ export EDITOR='nvim'
 export VISUAL=$EDITOR
 export GIT_EDITOR=$EDITOR
 
-
 export DO_NOT_TRACK=1
+
+# Add wf commands
+source /root/.sh_functions_wf
 
 # Add neovim location to PATH
 export PATH=$PATH:$STATE_DIR/neovim/bin
