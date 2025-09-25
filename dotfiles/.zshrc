@@ -46,9 +46,6 @@ export DO_NOT_TRACK=1
 # Add wf commands
 [ -f /root/.sh_functions_wf ] && source /root/.sh_functions_wf
 
-# Sync wf configuration
-wf ide sync
-
 # Add neovim location to PATH
 export PATH=$PATH:$STATE_DIR/neovim/bin
 

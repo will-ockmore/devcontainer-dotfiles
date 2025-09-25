@@ -186,6 +186,15 @@ def install_programs():
     )
 
 
+def post_install():
+    print()
+    print(f"{BOLD_WHITE}Running post install steps...{RESET}")
+    print()
+
+    # Sync wf configuration
+    subprocess.run(["wf", "ide", "sync"], check=True)
+
+
 def build_neovim():
     print()
     print(f"{BOLD_WHITE}Building neovim...{RESET}")
