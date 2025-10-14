@@ -108,7 +108,6 @@ def copy_nvim_config():
             "https://raw.githubusercontent.com/will-ockmore/vimrc/master/coc-settings.json"
         ).read()
     )
-    del coc_settings["python.formatting.blackPath"]
     coc_settings["python.analysis.typeCheckingMode"] = "off"
     coc_settings["python.linting.mypyEnabled"] = True
 
